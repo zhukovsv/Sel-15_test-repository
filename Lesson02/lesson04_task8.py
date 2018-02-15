@@ -32,7 +32,7 @@ def test_stickers_availability(driver):
         print('Product Name: {name}, Manufacturer: {manufacturer}, Sticker: {sticker}'.format(**locals()))
 
 
-def test_boxed_stickers(driver):
+def test_grouped_stickers(driver):
     driver.get(url)
     print('')
     # find and print ProductGroup name Most Popular, Campaigns, Latest Products
