@@ -1,8 +1,10 @@
+
 import pytest
 # file->Settings->Project interpreter find and add hamcrest
 from hamcrest import *
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+
 
 
 login, pwd = 'admin', 'admin'
@@ -27,6 +29,62 @@ def driver(request):
 def get_element_style_attributes(element, props=None):
     css_properties = props if props is not None else ['color', 'text-decoration', 'font-weight', 'font-size']
     return dict((prop, element.value_of_css_property(prop)) for prop in css_properties)
+
+
+# Test Gray and Red colors
+# Test font size
+def test_product_attributes_colors_and_fontsize(driver):
+    driver.get(URL)
+
+    # check color(RGB) and font-size for Campaign product on Home page.
+    box = driver.find_element(*Locators.CAMPAIGNS)
+    owner = box.find_element(By.CSS_SELECTOR, '.products .product:nth-of-type({index})'.format(index=1))
+
+    # check that color should be gray = rgbs(x,x,x,Y).
+    style = get_element_style_attributes(owner.find_element(*Locators.REGULAR_PRICE), ['color'])
+    rgb_color = style['color'].replace("rgba(", "").replace(")", "").split(",")
+    assert (int(rgb_color[0]) == int(rgb_color[1])) & (int(rgb_color[1]) == int(rgb_color[2])), \
+        "Color isn't gray"
+
+    # check that color should be red = rgbs(Z,x,x,Y).
+    style = get_element_style_attributes(owner.find_element(*Locators.CAMPAIGN_PRICE), ['color'])
+    rgb_color = style['color'].replace("rgba(", "").replace(")", "").split(",")
+    assert (int(rgb_color[1]) == int(rgb_color[2])) & (int(rgb_color[0]) != int(rgb_color[2])), \
+        "Color isn't red"
+
+    # check that Campaign Price > Regular price.
+    style = get_element_style_attributes(owner.find_element(*Locators.REGULAR_PRICE), ['font-size'])
+    regular_price_font_size = float(style['font-size'].replace("px", ""))
+    style = get_element_style_attributes(owner.find_element(*Locators.CAMPAIGN_PRICE), ['font-size'])
+    campaign_price_font_size = float(style['font-size'].replace("px", ""))
+    assert campaign_price_font_size > regular_price_font_size, \
+        "Campaign Price not grater than Regular price"
+
+    # Open Product page
+    owner.click()
+
+    # check color(RGB) and font-size for Campaign product on Product page.
+    owner = driver.find_element(*Locators.PRODUCT)
+
+    # check that color should be gray = rgbs(x,x,x,Y).
+    style = get_element_style_attributes(owner.find_element(*Locators.REGULAR_PRICE), ['color'])
+    rgb_color = style['color'].replace("rgba(", "").replace(")", "").split(",")
+    assert (int(rgb_color[0]) == int(rgb_color[1])) & (int(rgb_color[1]) == int(rgb_color[2])), \
+        "Color isn't gray"
+
+    # check that color should be red = rgbs(Z,x,x,Y).
+    style = get_element_style_attributes(owner.find_element(*Locators.CAMPAIGN_PRICE), ['color'])
+    rgb_color = style['color'].replace("rgba(", "").replace(")", "").split(",")
+    assert (int(rgb_color[1]) == int(rgb_color[2])) & (int(rgb_color[0]) != int(rgb_color[2])), \
+        "Color isn't red"
+
+    # check that Campaign Price > Regular price.
+    style = get_element_style_attributes(owner.find_element(*Locators.REGULAR_PRICE), ['font-size'])
+    regular_price_font_size = float(style['font-size'].replace("px", ""))
+    style = get_element_style_attributes(owner.find_element(*Locators.CAMPAIGN_PRICE), ['font-size'])
+    campaign_price_font_size = float(style['font-size'].replace("px", ""))
+    assert campaign_price_font_size > regular_price_font_size, \
+        "Campaign Price not grater than Regular price"
 
 
 # Check that product has the same attributes on Home and Product pages
@@ -115,7 +173,7 @@ def test_campaign_styles(driver):
         sub_displ = displayed[itemD]
         for subitemD in sub_displ:
             print(subitemD, ':', sub_displ[subitemD])
-            """
+    """
 
     assert_that(displayed, has_entries(expected), 'Check styles')
 
