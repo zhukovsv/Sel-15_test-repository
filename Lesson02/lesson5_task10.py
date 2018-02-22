@@ -46,11 +46,11 @@ def test_product_attributes_colors_and_fontsize(driver):
     assert (int(rgb_color[0]) == int(rgb_color[1])) & (int(rgb_color[1]) == int(rgb_color[2])), \
         "Color isn't gray"
 
-    # check that color should be red = rgbs(Z,x,x,Y).
+    # check that color should be red = rgbs(Z,x,x,Y). and x = 0
     style = get_element_style_attributes(owner.find_element(*Locators.CAMPAIGN_PRICE), ['color'])
     rgb_color = style['color'].replace("rgba(", "").replace(")", "").split(",")
-    assert (int(rgb_color[1]) == int(rgb_color[2])) & (int(rgb_color[0]) != int(rgb_color[2])), \
-        "Color isn't red"
+    assert (int(rgb_color[1]) == 0) & (int(rgb_color[1]) == int(rgb_color[2]))\
+           & (int(rgb_color[0]) != int(rgb_color[2])), "Color isn't red"
 
     # check that Campaign Price > Regular price.
     style = get_element_style_attributes(owner.find_element(*Locators.REGULAR_PRICE), ['font-size'])
@@ -75,8 +75,8 @@ def test_product_attributes_colors_and_fontsize(driver):
     # check that color should be red = rgbs(Z,x,x,Y).
     style = get_element_style_attributes(owner.find_element(*Locators.CAMPAIGN_PRICE), ['color'])
     rgb_color = style['color'].replace("rgba(", "").replace(")", "").split(",")
-    assert (int(rgb_color[1]) == int(rgb_color[2])) & (int(rgb_color[0]) != int(rgb_color[2])), \
-        "Color isn't red"
+    assert (int(rgb_color[1]) == 0) & (int(rgb_color[1]) == int(rgb_color[2]))\
+           & (int(rgb_color[0]) != int(rgb_color[2])), "Color isn't red"
 
     # check that Campaign Price > Regular price.
     style = get_element_style_attributes(owner.find_element(*Locators.REGULAR_PRICE), ['font-size'])
